@@ -1,0 +1,540 @@
+<html><head><base href="https://artclub.app/">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>美術部連絡アプリ</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&display=swap');
+
+  body {
+    font-family: 'Mochiy Pop One', sans-serif;
+    background-color: #FFF5E6;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="%23FFD1DC" stroke-width="2"/><path d="M30 50 Q50 30 70 50 Q50 70 30 50" fill="none" stroke="%23FFD1DC" stroke-width="2"/></svg>');
+    background-size: 100px 100px;
+    font-size: 18px;
+  }
+  .container {
+    background-color: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 16px rgba(255, 105, 180, 0.1);
+    max-width: 800px;
+    width: 100%;
+    border: 3px solid #FFB6C1;
+  }
+  h1, h2, h3 {
+    color: #FF69B4;
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.2);
+  }
+  h1 { font-size: 2.5em; }
+  h2 { font-size: 2em; }
+  h3 { font-size: 1.5em; }
+  .input-area, .analysis-area {
+    margin-bottom: 20px;
+  }
+  input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 2px solid #FFB6C1;
+    border-radius: 10px;
+    box-sizing: border-box;
+    font-family: 'Mochiy Pop One', sans-serif;
+    background-color: #FFF0F5;
+    font-size: 1em;
+  }
+  textarea {
+    height: 100px;
+    resize: vertical;
+  }
+  button {
+    background-color: #FF69B4;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1em;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 25px;
+    transition: all 0.3s;
+    font-family: 'Mochiy Pop One', sans-serif;
+    box-shadow: 0 4px 6px rgba(255, 105, 180, 0.2);
+  }
+  button:hover {
+    background-color: #FF1493;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(255, 105, 180, 0.3);
+  }
+  .results {
+    margin-top: 20px;
+  }
+  .chart-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
+  }
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 20px;
+    border: 2px solid #FFB6C1;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  th, td {
+    border: 1px solid #FFD1DC;
+    padding: 12px;
+    text-align: left;
+    font-size: 0.9em;
+  }
+  th {
+    background-color: #FFB6C1;
+    color: white;
+  }
+  tr:nth-child(even) {
+    background-color: #FFF0F5;
+  }
+  .button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+  }
+  .cancel-button {
+    background-color: #FF9999;
+  }
+  .cancel-button:hover {
+    background-color: #FF6666;
+  }
+  .back-button {
+    background-color: #66B3FF;
+  }
+  .back-button:hover {
+    background-color: #3399FF;
+  }
+  .palette {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="%23FFB6C1"/><circle cx="30" cy="30" r="10" fill="%23FF69B4"/><circle cx="70" cy="30" r="10" fill="%23FFD700"/><circle cx="30" cy="70" r="10" fill="%2300CED1"/><circle cx="70" cy="70" r="10" fill="%2332CD32"/></svg>');
+    background-size: contain;
+  }
+  .palette-1 { top: 10px; left: 10px; transform: rotate(-15deg); }
+  .palette-2 { bottom: 10px; right: 10px; transform: rotate(15deg); }
+  .date-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .date-input button {
+    flex: 0 0 auto;
+    padding: 8px 16px;
+    font-size: 0.9em;
+  }
+  .date-input input[type="date"] {
+    flex: 1;
+  }
+  .note {
+    text-align: center;
+    color: #FF69B4;
+    font-size: 0.9em;
+    margin-bottom: 20px;
+  }
+  label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    color: #FF69B4;
+  }
+  .date-note {
+    font-size: 0.8em;
+    color: #FF69B4;
+    margin-top: 5px;
+  }
+  .input-area > * {
+    margin-bottom: 15px;
+  }
+  .calendar-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+  }
+  .calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+  }
+  .calendar-day {
+    border: 1px solid #FFB6C1;
+    padding: 5px;
+    min-height: 60px;
+    background-color: #FFF0F5;
+  }
+  .calendar-day.small {
+    font-size: 0.8em;
+    min-height: 50px;
+  }
+  .calendar-day-header {
+    font-weight: bold;
+    text-align: center;
+    color: #FF69B4;
+  }
+  .calendar-day-content {
+    font-size: 0.8em;
+  }
+  .calendar-day-event {
+    background-color: #FFD1DC;
+    border-radius: 3px;
+    padding: 2px;
+    margin: 2px 0;
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="palette palette-1"></div>
+  <div class="palette palette-2"></div>
+  <div class="container">
+    <h1>🎨 美術部連絡アプリ 🖌️</h1>
+    <p class="note">※これは部活用です。学校をお休みする場合は、すぐーるへ（10月1日より）</p>
+    <div class="input-area">
+      <label for="name">名前を入れてください：</label>
+      <input type="text" id="name" placeholder="名前">
+
+      <label for="grade">学年を選んでください：</label>
+      <select id="grade">
+        <option value="">学年を選択</option>
+        <option value="1">1年生</option>
+        <option value="2">2年生</option>
+        <option value="3">3年生</option>
+      </select>
+
+      <label for="type">連絡種類を選んでください：</label>
+      <select id="type">
+        <option value="">連絡種類を選択</option>
+        <option value="欠席">欠席</option>
+        <option value="早退">早退</option>
+        <option value="遅刻">遅刻</option>
+      </select>
+
+      <label for="reason">理由を選んでください：</label>
+      <select id="reason">
+        <option value="">理由を選択</option>
+        <option value="体調不良">体調不良</option>
+        <option value="通院">通院</option>
+        <option value="家庭の事情">家庭の事情</option>
+        <option value="他の活動">他の活動</option>
+        <option value="その他">その他</option>
+      </select>
+
+      <label for="date">日にちを選んでください：</label>
+      <div class="date-input">
+        <button type="button" onclick="setDate('today')">今日</button>
+        <button type="button" onclick="setDate('tomorrow')">明日</button>
+        <input type="date" id="date" required>
+      </div>
+      <p class="date-note">※それ以外の日にちの場合はカレンダーから選んでください。</p>
+
+      <label for="details">詳細情報・伝言（任意）：</label>
+      <textarea id="details" placeholder="詳細情報・伝言（任意）"></textarea>
+      <div class="button-group">
+        <button onclick="addEntry()">登録</button>
+        <button class="cancel-button" onclick="cancelLastEntry()">取消</button>
+      </div>
+    </div>
+    <div class="analysis-area">
+      <h2>集計</h2>
+      <select id="analysisType">
+        <option value="month">月ごとの集計</option>
+      </select>
+      <input type="month" id="monthPicker">
+      <button onclick="analyzeData()">集計する</button>
+    </div>
+    <div class="results" id="results" style="display: none;"></div>
+    <div class="calendar-container" id="calendarContainer" style="display: none;"></div>
+    <div class="button-group" id="backButtonContainer" style="display: none;">
+      <button class="back-button" onclick="goBack()">戻る</button>
+    </div>
+  </div>
+
+  <script>
+    let entries = [];
+    let analysisResults = {};
+    let currentView = 'input'; // 'input' or 'results'
+
+    document.getElementById('analysisType').addEventListener('change', function() {
+      const monthPicker = document.getElementById('monthPicker');
+      if (this.value === 'month') {
+        monthPicker.style.display = 'block';
+      } else {
+        monthPicker.style.display = 'none';
+      }
+    });
+
+    function setDate(option) {
+      const dateInput = document.getElementById('date');
+      const today = new Date();
+      
+      if (option === 'today') {
+        dateInput.valueAsDate = today;
+      } else if (option === 'tomorrow') {
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        dateInput.valueAsDate = tomorrow;
+      }
+    }
+
+    function addEntry() {
+      const name = document.getElementById('name').value;
+      const grade = document.getElementById('grade').value;
+      const type = document.getElementById('type').value;
+      const reason = document.getElementById('reason').value;
+      const date = document.getElementById('date').value;
+      const details = document.getElementById('details').value;
+
+      if (name && grade && type && reason && date) {
+        entries.push({ name, grade, type, reason, date, details });
+        clearInputs();
+        alert('連絡が登録されました。ありがとうございます！🎨');
+      } else {
+        alert('全ての項目を入力してください。');
+      }
+    }
+
+    function clearInputs() {
+      document.getElementById('name').value = '';
+      document.getElementById('grade').value = '';
+      document.getElementById('type').value = '';
+      document.getElementById('reason').value = '';
+      document.getElementById('date').value = '';
+      document.getElementById('details').value = '';
+    }
+
+    function analyzeData() {
+      if (entries.length === 0) {
+        alert('データがありません。連絡を登録してください。');
+        return;
+      }
+
+      const monthPicker = document.getElementById('monthPicker').value;
+
+      if (!monthPicker) {
+        alert('月を選択してください。');
+        return;
+      }
+
+      const filteredEntries = entries.filter(entry => entry.date.startsWith(monthPicker));
+
+      const summary = summarizeData(filteredEntries);
+      displayResults(summary, monthPicker);
+
+      // Save analysis results
+      const daysInMonth = new Date(monthPicker.slice(0, 4), monthPicker.slice(5, 7), 0).getDate();
+      for (let i = 1; i <= daysInMonth; i++) {
+        const day = `${monthPicker}-${i.toString().padStart(2, '0')}`;
+        if (filteredEntries.some(entry => entry.date === day)) {
+          analysisResults[day] = summarizeData(filteredEntries.filter(entry => entry.date === day));
+        }
+      }
+
+      currentView = 'results';
+      document.querySelector('.input-area').style.display = 'none';
+      document.querySelector('.analysis-area').style.display = 'none';
+      document.getElementById('results').style.display = 'block';
+      document.getElementById('calendarContainer').style.display = 'none';
+      document.getElementById('backButtonContainer').style.display = 'flex';
+
+      // Add button to switch between table and calendar view
+      const switchViewButton = document.createElement('button');
+      switchViewButton.textContent = 'カレンダー表示に切り替え';
+      switchViewButton.onclick = toggleResultView;
+      document.getElementById('results').appendChild(switchViewButton);
+
+      // Add record button if a month has passed
+      const oldestEntry = entries.reduce((oldest, entry) => 
+        entry.date < oldest ? entry.date : oldest
+      , entries[0].date);
+
+      if (isMonthPassed(oldestEntry)) {
+        const recordButton = document.createElement('button');
+        recordButton.textContent = '記録';
+        recordButton.onclick = recordData;
+        document.getElementById('results').appendChild(recordButton);
+      }
+    }
+
+    function toggleResultView() {
+      const resultsDiv = document.getElementById('results');
+      const calendarContainer = document.getElementById('calendarContainer');
+      const switchViewButton = resultsDiv.querySelector('button');
+
+      if (resultsDiv.style.display !== 'none') {
+        resultsDiv.style.display = 'none';
+        calendarContainer.style.display = 'block';
+        switchViewButton.textContent = '表形式に切り替え';
+        displayCalendar();
+      } else {
+        resultsDiv.style.display = 'block';
+        calendarContainer.style.display = 'none';
+        switchViewButton.textContent = 'カレンダー表示に切り替え';
+      }
+    }
+
+    function displayCalendar() {
+      const calendarContainer = document.getElementById('calendarContainer');
+      calendarContainer.innerHTML = '';
+
+      const monthPicker = document.getElementById('monthPicker').value;
+      const [year, month] = monthPicker.split('-').map(Number);
+
+      const firstDay = new Date(year, month - 1, 1);
+      const lastDay = new Date(year, month, 0);
+
+      const calendar = document.createElement('div');
+      calendar.className = 'calendar';
+
+      const daysOfWeek = ['日', '月', '火', '水', '木', '金', '土'];
+      daysOfWeek.forEach(day => {
+        const dayHeader = document.createElement('div');
+        dayHeader.className = 'calendar-day-header';
+        dayHeader.textContent = day;
+        calendar.appendChild(dayHeader);
+      });
+
+      for (let i = 0; i < firstDay.getDay(); i++) {
+        calendar.appendChild(document.createElement('div'));
+      }
+
+      for (let i = 1; i <= lastDay.getDate(); i++) {
+        const dayDiv = document.createElement('div');
+        dayDiv.className = 'calendar-day';
+        const dayOfWeek = new Date(year, month - 1, i).getDay();
+        if ([4, 6, 0].includes(dayOfWeek)) {
+          dayDiv.classList.add('small');
+        }
+        dayDiv.innerHTML = `<div class="calendar-day-header">${i}</div><div class="calendar-day-content"></div>`;
+
+        const currentDate = `${year}-${month.toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
+        const futureEntries = entries.filter(entry => entry.date === currentDate);
+        
+        if (analysisResults[currentDate] || futureEntries.length > 0) {
+          const content = dayDiv.querySelector('.calendar-day-content');
+          
+          if (analysisResults[currentDate]) {
+            const absences = Object.values(analysisResults[currentDate]).reduce((sum, counts) => sum + counts.欠席.length, 0);
+            if (absences > 0) {
+              const eventDiv = document.createElement('div');
+              eventDiv.className = 'calendar-day-event';
+              eventDiv.textContent = `欠席: ${absences}`;
+              content.appendChild(eventDiv);
+            }
+          }
+
+          if (futureEntries.length > 0) {
+            futureEntries.forEach(entry => {
+              const eventDiv = document.createElement('div');
+              eventDiv.className = 'calendar-day-event';
+              eventDiv.textContent = `${entry.type}: ${entry.name}`;
+              content.appendChild(eventDiv);
+            });
+          }
+        }
+
+        calendar.appendChild(dayDiv);
+      }
+
+      calendarContainer.appendChild(calendar);
+    }
+
+    function summarizeData(filteredEntries) {
+      const summary = {};
+      filteredEntries.forEach(entry => {
+        if (!summary[entry.name]) {
+          summary[entry.name] = { grade: entry.grade, 欠席: [], 遅刻: [], 早退: [] };
+        }
+        summary[entry.name][entry.type].push({ date: entry.date, reason: entry.reason });
+      });
+      return summary;
+    }
+
+    function displayResults(summary, monthPicker) {
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = `<h2>${monthPicker}の集計結果</h2>`;
+      
+      resultsDiv.innerHTML += `
+        <table>
+          <tr>
+            <th>名前</th>
+            <th>学年</th>
+            <th>欠席回数</th>
+            <th>遅刻回数</th>
+            <th>早退回数</th>
+            <th>詳細</th>
+          </tr>
+          ${Object.entries(summary).map(([name, data]) => `
+            <tr>
+              <td>${name}</td>
+              <td>${data.grade}年生</td>
+              <td>${data.欠席.length}</td>
+              <td>${data.遅刻.length}</td>
+              <td>${data.早退.length}</td>
+              <td>
+                ${['欠席', '遅刻', '早退'].map(type => 
+                  data[type].map(item => `${type}: ${item.date} (${item.reason})`).join('<br>')
+                ).join('<br>')}
+              </td>
+            </tr>
+          `).join('')}
+        </table>
+      `;
+    }
+
+    function isMonthPassed(date) {
+      const now = new Date();
+      const oneMonthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+      return new Date(date) <= oneMonthAgo;
+    }
+
+    function recordData() {
+      const recordedData = JSON.stringify(entries);
+      const blob = new Blob([recordedData], {type: 'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'art_club_records.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function cancelLastEntry() {
+      if (entries.length > 0) {
+        entries.pop();
+        alert('最後の連絡が取り消されました。');
+      } else {
+        alert('取り消す連絡がありません。');
+      }
+    }
+
+    function goBack() {
+      if (currentView === 'results') {
+        document.querySelector('.input-area').style.display = 'block';
+        document.querySelector('.analysis-area').style.display = 'block';
+        document.getElementById('results').style.display = 'none';
+        document.getElementById('calendarContainer').style.display = 'none';
+        document.getElementById('backButtonContainer').style.display = 'none';
+        currentView = 'input';
+      }
+    }
+  </script>
+</body>
+</html>
